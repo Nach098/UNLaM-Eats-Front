@@ -46,7 +46,9 @@ export class RepartosService {
   }
 
  asignarRepartidor(idReparto: number, idRepartidor: number): Observable<Reparto> {
-    return this.http.post<Reparto>(`${this.baseUrl}/asignar`, { idReparto, idRepartidor });
+    return this.http.post<Reparto>(`${this.baseUrl}/asignar`,
+      { idReparto, idRepartidor },
+      { headers: { 'Content-Type': 'application/json' } });
   }
 
  cambiarEstado(id: number, nuevoEstado: string): Observable<Reparto> {

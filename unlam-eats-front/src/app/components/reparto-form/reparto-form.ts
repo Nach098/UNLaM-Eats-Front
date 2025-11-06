@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output , EventEmitter} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Reparto, RepartosService } from '../../services/repartos.service';
@@ -12,7 +12,10 @@ import { EstadoReparto } from '../repartos-list/repartos-list';
   styleUrl: './reparto-form.css',
 })
 export class RepartoForm {
-  nuevoReparto : Partial<Reparto> = {
+    @Output() repartoCreado = new EventEmitter<Reparto>();
+
+
+    nuevoReparto : Partial<Reparto> = {
     idPedido : 0,
     idRepartidor : 0,
     direccionEntrega : '',
@@ -32,7 +35,8 @@ export class RepartoForm {
     }
 
     this.repartosService.create(this.nuevoReparto as Reparto).subscribe({
-      next: () => {
+      next: (repartoCreado) => {
+        this.repartoCreado.emit(repartoCreado); 
         alert('Reparto creado correctamente');
         this.nuevoReparto = {
           idPedido : 0,

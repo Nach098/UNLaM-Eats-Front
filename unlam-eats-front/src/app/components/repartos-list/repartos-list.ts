@@ -3,17 +3,19 @@ import { RepartosService, Reparto } from '../../services/repartos.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { RepartoForm } from '../reparto-form/reparto-form';
+import { FormatFechaPipe } from '../../pipes/format-fecha-pipe';
 
 export enum EstadoReparto {
   PENDIENTE = 0,
-  EN_CAMINO = 1,
+  ASIGNADO = 2,
   ENTREGADO = 3
 }
 
 @Component({
   selector: 'app-repartos-list',
   standalone: true,
-  imports: [CommonModule, FormsModule ,HttpClientModule],
+  imports: [CommonModule, FormsModule ,HttpClientModule, RepartoForm, FormatFechaPipe],
   templateUrl: './repartos-list.html',
   styleUrls: ['./repartos-list.css'],
 })
@@ -22,6 +24,8 @@ export class RepartosList implements OnInit {
   loading = false;
   error = '';
   EstadoReparto = EstadoReparto;
+  mostrarModal = false;
+  repartoSeleccionado: Reparto | null = null;
 
 
   constructor(private repartosService: RepartosService) { }
@@ -62,8 +66,16 @@ export class RepartosList implements OnInit {
     if(!idRepartidor) return;
 
     this.repartosService.asignarRepartidor(idReparto,idRepartidor).subscribe({
-      next:() => {
-        this.cargarRepartos();
+      next:(repartoActualizado) => {
+        const index = this.repartos.findIndex(r => r.id === idReparto);
+        if(index !== -1){
+          this.repartos[index].idRepartidor = repartoActualizado.idRepartidor;
+          this.repartos[index].estado =  EstadoReparto.ASIGNADO;
+          this.repartos[index].fechaAsignacion = repartoActualizado.fechaAsignacion;
+        }
+        alert(`Repartidor asignado correctamente, al repartidor ${idRepartidor})`);
+
+
       },
       error: (error) => {
         alert("Error al asignar el repartidor");
@@ -74,8 +86,15 @@ export class RepartosList implements OnInit {
  cambiarEstadoSelect(reparto: Reparto, nuevoEstadoString: string): void {
     if (!nuevoEstadoString) return;
 
-    // Evitar actualizar si es el mismo estado
-    if (nuevoEstadoString === this.getEstadoString(reparto.estado)) return;
+    let nuevoEstado: EstadoReparto;
+    switch (nuevoEstadoString) {
+      case 'PENDIENTE': nuevoEstado = EstadoReparto.PENDIENTE; break;
+      case 'ASIGNADO': nuevoEstado = EstadoReparto.ASIGNADO; break;
+      case 'ENTREGADO': nuevoEstado = EstadoReparto.ENTREGADO; break;
+      default: console.error('Estado inválido:', nuevoEstadoString); return;
+    }
+
+    if (nuevoEstado === reparto.estado) return;
 
     this.repartosService.cambiarEstado(reparto.id, nuevoEstadoString).subscribe({
       next: (repartoActualizado) => {
@@ -94,9 +113,23 @@ export class RepartosList implements OnInit {
  getEstadoString(estado: EstadoReparto): string {
     switch (estado) {
       case EstadoReparto.PENDIENTE: return 'PENDIENTE';
-      case EstadoReparto.EN_CAMINO: return 'EN_CAMINO';
+      case EstadoReparto.ASIGNADO: return 'ASIGNADO';
       case EstadoReparto.ENTREGADO: return 'ENTREGADO';
       default: return '';
     }
   }
+
+  abrirModal(reparto?: Reparto) {
+  this.repartoSeleccionado = reparto || null;
+  this.mostrarModal = true;
+  }
+
+  cerrarModal() {
+    this.mostrarModal = false;
+  }
+
+  onRepartoCreado(nuevoReparto: Reparto) {
+  this.cargarRepartos();
+  this.cerrarModal();
+}
 }

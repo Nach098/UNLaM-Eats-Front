@@ -1,23 +1,25 @@
-<h2> + Crear un nuevo reparto </h2>
-<form (ngSubmit)="crearReparto()" #f="ngForm">
-<!-- Aca en realidad se tendria que recibir el id de pedido de PedidosApi, simulo que ingresamos uno-->
-  <label>ID Pedido:</label>
-  <input type="number" [(ngModel)]="nuevoReparto.idPedido" name="idPedido" required />
-<!-- Aca en realidad se tendria que recibir la direccion de UsuariosApi, simulo que ingresamos uno-->
-  <label>Dirección de Entrega:</label>
-  <input type="text" [(ngModel)]="nuevoReparto.direccionEntrega" name="direccionEntrega" required />
+<h2 class="form-title">Crear un nuevo reparto</h2>
 
+<form (ngSubmit)="crearReparto()" #f="ngForm" class="reparto-form">
 
-  <label>Estado:</label>
-  <select [(ngModel)]="nuevoReparto.estado" name="estado">
+  <label for="idPedido">ID Pedido:</label>
+  <input id="idPedido" type="number" [(ngModel)]="nuevoReparto.idPedido" name="idPedido" required />
+
+  <label for="direccionEntrega">Dirección de Entrega:</label>
+  <input id="direccionEntrega" type="text" [(ngModel)]="nuevoReparto.direccionEntrega" name="direccionEntrega" required />
+
+  <label for="estado">Estado:</label>
+  <select id="estado" [(ngModel)]="nuevoReparto.estado" name="estado">
     <option [ngValue]="EstadoReparto.PENDIENTE">Pendiente</option>
-    <option [ngValue]="EstadoReparto.EN_CAMINO">En camino</option>
+    <option [ngValue]="EstadoReparto.ASIGNADO">Asignado</option>
     <option [ngValue]="EstadoReparto.ENTREGADO">Entregado</option>
   </select>
 
-  <label>Observaciones:</label>
-  <input type="text" [(ngModel)]="nuevoReparto.observaciones" name="observaciones" />
+  <label for="observaciones">Observaciones:</label>
+  <input id="observaciones" type="text" [(ngModel)]="nuevoReparto.observaciones" name="observaciones" />
 
-  <button type="submit">Crear Reparto</button>
+  <button type="submit" class="btn btn-primary" [disabled]="f.invalid">
+    Crear Reparto
+  </button>
 
 </form>
