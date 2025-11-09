@@ -1,4 +1,6 @@
+// En: src/app/app.routes.ts
 import { Routes } from '@angular/router';
+<<<<<<< Updated upstream
 import { authGuard, clientGuard, ownerGuard, deliveryGuard } from './core/guards/auth-guards';
 
 export const routes: Routes = [
@@ -54,4 +56,24 @@ export const routes: Routes = [
     loadComponent: () => import('./features/checkout/checkout').then(m => m.CheckoutComponent)
   },
   { path: '**', redirectTo: '' }
+=======
+// <-- 1. IMPORTA LAS CLASES CORRECTAS
+import { Login } from './components/login/login'; // Sin .component
+import { Register } from './components/register/register'; // Sin .component
+
+export const routes: Routes = [
+  {
+    path: 'login',
+    component: Login // <-- Usa la clase "Login"
+  },
+  {
+    path: 'register',
+    component: Register // <-- Usa la clase "Register"
+  },
+  {
+    path: '',
+    redirectTo: '/login',
+    pathMatch: 'full'
+  }
+>>>>>>> Stashed changes
 ];
