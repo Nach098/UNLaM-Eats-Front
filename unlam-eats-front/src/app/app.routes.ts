@@ -45,9 +45,13 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/producto-form/producto-form')
                             .then(m => m.ProductoForm) 
   },
-  { 
-    path: '**', 
-    redirectTo: '', 
-    pathMatch: 'full' 
-  }
+  {
+    path: 'restaurantes/:id',
+    loadComponent: () => import('./features/restaurantes/detail/detail').then(m => m.RestauranteDetailComponent)
+  },
+  {
+    path: 'checkout',
+    loadComponent: () => import('./features/checkout/checkout').then(m => m.CheckoutComponent)
+  },
+  { path: '**', redirectTo: '' }
 ];

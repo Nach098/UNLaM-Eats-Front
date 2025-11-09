@@ -25,23 +25,18 @@
 <section class="container stack-lg">
   <div class="stack">
     <h2 style="margin:0; font-size: 18px;">Cerca de vos</h2>
-    <div class="home-grid">
-      <article class="card stack">
-        <div class="home-thumb"></div>
-        <div class="stack" style="gap:4px;">
-          <strong>Pizzería Napoli</strong>
-          <small class="text-muted">Italiana • 25–35 min • $</small>
-        </div>
-        <a routerLink="/login" class="btn btn-primary">Iniciar pedido</a>
-      </article>
 
-      <article class="card stack">
+    <div *ngIf="loading" class="text-muted">Cargando restaurantes...</div>
+    <div *ngIf="!loading && error" class="text-danger">{{ error }}</div>
+
+    <div *ngIf="!loading && !error" class="home-grid">
+      <article class="card stack" *ngFor="let r of restaurants">
         <div class="home-thumb"></div>
         <div class="stack" style="gap:4px;">
-          <strong>Sushi Zen</strong>
-          <small class="text-muted">Japonesa • 30–40 min • $$</small>
+          <strong>{{ r.name }}</strong>
+          <small class="text-muted">{{ r.address }}</small>
         </div>
-        <a routerLink="/login" class="btn btn-primary">Iniciar pedido</a>
+        <a [routerLink]="['/restaurantes', r.id]" class="btn btn-primary">Iniciar pedido</a>
       </article>
     </div>
   </div>

@@ -1,4 +1,4 @@
 export const environment = {
   production: false,
-  apiBaseUrl: '/api' // TODO: reemplazar por la URL real del API Gateway
+  apiBaseUrl: 'http://localhost:8000/api'
 };
